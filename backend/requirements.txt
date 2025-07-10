@@ -1,0 +1,6 @@
+Flask
+Flask-Cors
+SQLAlchemy
+psycopg2-binary  # or mysqlclient for MySQL
+python-dotenv
+selenium
