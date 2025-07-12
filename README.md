@@ -2,6 +2,11 @@
 
 A full-stack job board application with a React frontend, Flask backend, and web scraping functionality.
 
+## 📹 Video Reference
+
+For a detailed walkthrough and demonstration of this application, check out our video guide:
+[Watch Demo Video](https://drive.google.com/file/d/1QLytmIW5w88BYSYNhXAJF2vtfVPmNQgs/view?usp=sharing)
+
 ## Project Structure
 
 ```
