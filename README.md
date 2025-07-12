@@ -67,18 +67,6 @@ Navigate to the Scraper directory and set up the web scraping scripts:
 ```bash
 cd Scraper
 
-# Create virtual environment (if not already created)
-python -m venv venv
-
-# Activate virtual environment
-# On Windows:
-venv\Scripts\activate
-# On macOS/Linux:
-source venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
-
 # Run the scraper
 python run_scraper.py
 ```
