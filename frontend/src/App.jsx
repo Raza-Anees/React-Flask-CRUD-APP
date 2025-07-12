@@ -1,19 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import JobBoard from './Components/JobBoard';
 import AddEditJob from './Components/AddEditJob';
 import './App.css';
 
 export default function App() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+  };
+
   return (
     <Router>
       <div className="min-h-screen bg-gradient-to-r from-green-500 to-blue-800 text-black">
         {/* Header */}
-        <header className="flex items-center justify-between px-10 py-5 bg-transparent">
-          <Link to="/">
-            <h1 className="text-2xl font-bold text-black">Actuary List</h1>
+        <header className="flex items-center justify-between px-4 md:px-10 py-5 bg-transparent relative z-50">
+          <Link to="/" onClick={closeMobileMenu}>
+            <h1 className="text-xl md:text-2xl font-bold text-black">Actuary List</h1>
           </Link>
-          <nav className="flex items-center space-x-6">
+          
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center space-x-6">
             <a href="#" className="text-black hover:underline">About</a>
             <a href="#" className="text-black hover:underline">Blog</a>
             <Link to="/add" className="text-black hover:underline">Post A Job</Link>
@@ -21,7 +33,62 @@ export default function App() {
               Get Free Job Alerts
             </button>
           </nav>
+
+          {/* Mobile Menu Button */}
+          <button
+            className="md:hidden flex flex-col justify-center items-center w-8 h-8 space-y-1 z-50"
+            onClick={toggleMobileMenu}
+            aria-label="Toggle mobile menu"
+          >
+            <span className={`block w-6 h-0.5 bg-black transition-all duration-300 ${isMobileMenuOpen ? 'rotate-45 translate-y-1.5' : ''}`}></span>
+            <span className={`block w-6 h-0.5 bg-black transition-all duration-300 ${isMobileMenuOpen ? 'opacity-0' : ''}`}></span>
+            <span className={`block w-6 h-0.5 bg-black transition-all duration-300 ${isMobileMenuOpen ? '-rotate-45 -translate-y-1.5' : ''}`}></span>
+          </button>
+
+          {/* Mobile Navigation Menu */}
+          {isMobileMenuOpen && (
+            <div className="md:hidden absolute top-full left-0 right-0 bg-white shadow-lg z-40">
+              <nav className="flex flex-col py-4 px-6 space-y-4">
+                <a 
+                  href="#" 
+                  className="text-black hover:text-green-600 py-2 border-b border-gray-200"
+                  onClick={closeMobileMenu}
+                >
+                  About
+                </a>
+                <a 
+                  href="#" 
+                  className="text-black hover:text-green-600 py-2 border-b border-gray-200"
+                  onClick={closeMobileMenu}
+                >
+                  Blog
+                </a>
+                <Link 
+                  to="/add" 
+                  className="text-black hover:text-green-600 py-2 border-b border-gray-200"
+                  onClick={closeMobileMenu}
+                >
+                  Post A Job
+                </Link>
+                <button 
+                  className="bg-green-400 text-black px-4 py-3 rounded-lg font-semibold text-center hover:bg-green-500 transition-colors"
+                  onClick={closeMobileMenu}
+                >
+                  Get Free Job Alerts
+                </button>
+              </nav>
+            </div>
+          )}
         </header>
+
+        {/* Overlay for mobile menu */}
+        {isMobileMenuOpen && (
+          <div 
+            className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-30"
+            onClick={closeMobileMenu}
+          ></div>
+        )}
+
         {/* Routes */}
         <Routes>
           <Route path="/" element={<JobBoard />} />
@@ -31,7 +98,7 @@ export default function App() {
       </div>
     </Router>
   );
-} 
+}
 
 
 

@@ -23,6 +23,7 @@ export default function JobBoard() {
     sort: 'posting_date_desc',
   });
   const [refresh, setRefresh] = useState(false);
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const navigate = useNavigate();
 
   const fetchJobs = async () => {
@@ -81,11 +82,31 @@ export default function JobBoard() {
 
   const handleDeleted = () => setRefresh(r => !r);
 
+  const toggleMobileFilter = () => {
+    setIsMobileFilterOpen(!isMobileFilterOpen);
+  };
+
   return (
     <div className="min-h-screen bg-gray-100">
-      <main className="max-w-7xl mx-auto mt-10 grid grid-cols-1 md:grid-cols-3 gap-8">
-        {/* Filter Sidebar */}
-        <aside>
+      <main className="max-w-7xl mx-auto mt-6 md:mt-10 px-4 md:px-0">
+        {/* Mobile Filter Toggle */}
+        <div className="md:hidden mb-4 flex justify-between items-center">
+          <button
+            onClick={toggleMobileFilter}
+            className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded font-semibold flex items-center"
+          >
+            {isMobileFilterOpen ? 'Hide Filters' : 'Show Filters'}
+          </button>
+          <button
+            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded font-semibold"
+            onClick={() => navigate('/add')}
+          >
+            + Post Job
+          </button>
+        </div>
+
+        {/* Mobile Filter Panel */}
+        <div className={`md:hidden mb-6 transition-all duration-300 ${isMobileFilterOpen ? 'block' : 'hidden'}`}>
           <FilterSortJob
             filters={filters}
             onChange={handleFilterChange}
@@ -94,59 +115,79 @@ export default function JobBoard() {
             tags={tagsList}
             onReset={handleReset}
           />
-        </aside>
-        {/* Job List */}
-        <section className="md:col-span-2 space-y-4">
-          <div className="flex justify-end mb-4">
-            <button
-              className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded font-semibold"
-              onClick={() => navigate('/add')}
-            >
-              + Post a Job
-            </button>
-          </div>
-          {loading ? (
-            <p className="text-center text-gray-500">Loading jobs...</p>
-          ) : jobs.length === 0 ? (
-            <p className="text-center text-gray-500">No jobs found.</p>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
-              {jobs.map(job => (
-                <div key={job.id} className="bg-white p-6 rounded-lg shadow flex flex-col justify-between">
-                  <div>
-                    <h4 className="font-bold text-blue-600 text-lg mb-1">{job.title}</h4>
-                    <div className="flex flex-wrap gap-2 text-sm text-gray-600 mb-2">
-                      <span className="font-semibold">{job.company}</span>
-                      {job.location && <span className="bg-gray-200 px-2 py-1 rounded">{job.location}</span>}
-                      {job.job_type && <span className="bg-green-100 text-green-700 px-2 py-1 rounded">{job.job_type}</span>}
-                    </div>
-                    <div className="flex flex-wrap gap-2 mb-2">
-                      {job.tags && job.tags.map((tag, i) => (
-                        <span key={i} className="bg-yellow-100 text-yellow-700 px-2 py-1 rounded text-xs">{tag}</span>
-                      ))}
-                    </div>
-                    {job.salary && <div className="text-gray-500 text-xs mb-1">Salary: {job.salary}</div>}
-                    {job.url && (
-                      <a href={job.url} target="_blank" rel="noreferrer" className="text-blue-500 underline text-xs">Apply</a>
-                    )}
-                  </div>
-                  <div className="flex justify-between items-center mt-4">
-                    <span className="text-gray-400 text-xs">Posted: {job.posting_date && new Date(job.posting_date).toLocaleDateString()}</span>
-                    <div className="flex gap-2">
-                      <button
-                        className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs"
-                        onClick={() => navigate(`/edit/${job.id}`)}
-                      >
-                        Edit
-                      </button>
-                      <DeleteJob jobId={job.id} onDeleted={handleDeleted} />
-                    </div>
-                  </div>
-                </div>
-              ))}
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+          {/* Desktop Filter Sidebar */}
+          <aside className="hidden lg:block">
+            <FilterSortJob
+              filters={filters}
+              onChange={handleFilterChange}
+              locations={locationsList}
+              jobTypes={jobTypes}
+              tags={tagsList}
+              onReset={handleReset}
+            />
+          </aside>
+
+          {/* Job List */}
+          <section className="lg:col-span-2 space-y-4">
+            {/* Desktop Post Job Button */}
+            <div className="hidden md:flex justify-end mb-4">
+              <button
+                className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded font-semibold"
+                onClick={() => navigate('/add')}
+              >
+                + Post a Job
+              </button>
             </div>
-          )}
-        </section>
+
+            {loading ? (
+              <p className="text-center text-gray-500 py-8">Loading jobs...</p>
+            ) : jobs.length === 0 ? (
+              <p className="text-center text-gray-500 py-8">No jobs found.</p>
+            ) : (
+              <div className="grid grid-cols-1 gap-4 md:gap-6">
+                {jobs.map(job => (
+                  <div key={job.id} className="bg-white p-4 md:p-6 rounded-lg shadow flex flex-col justify-between">
+                    <div>
+                      <h4 className="font-bold text-blue-600 text-base md:text-lg mb-2">{job.title}</h4>
+                      <div className="flex flex-wrap gap-2 text-sm text-gray-600 mb-3">
+                        <span className="font-semibold">{job.company}</span>
+                        {job.location && <span className="bg-gray-200 px-2 py-1 rounded text-xs">{job.location}</span>}
+                        {job.job_type && <span className="bg-green-100 text-green-700 px-2 py-1 rounded text-xs">{job.job_type}</span>}
+                      </div>
+                      <div className="flex flex-wrap gap-1 md:gap-2 mb-3">
+                        {job.tags && job.tags.slice(0, 3).map((tag, i) => (
+                          <span key={i} className="bg-yellow-100 text-yellow-700 px-2 py-1 rounded text-xs">{tag}</span>
+                        ))}
+                        {job.tags && job.tags.length > 3 && (
+                          <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs">+{job.tags.length - 3} more</span>
+                        )}
+                      </div>
+                      {job.salary && <div className="text-gray-500 text-xs mb-2">Salary: {job.salary}</div>}
+                      {job.url && (
+                        <a href={job.url} target="_blank" rel="noreferrer" className="text-blue-500 underline text-xs">Apply</a>
+                      )}
+                    </div>
+                    <div className="flex justify-between items-center mt-4 pt-3 border-t border-gray-100">
+                      <span className="text-gray-400 text-xs">Posted: {job.posting_date && new Date(job.posting_date).toLocaleDateString()}</span>
+                      <div className="flex gap-2">
+                        <button
+                          className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs"
+                          onClick={() => navigate(`/edit/${job.id}`)}
+                        >
+                          Edit
+                        </button>
+                        <DeleteJob jobId={job.id} onDeleted={handleDeleted} />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
+        </div>
       </main>
     </div>
   );

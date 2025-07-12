@@ -23,7 +23,7 @@ export default function DeleteJob({ jobId, onDeleted }) {
     <>
       <button
         onClick={handleDelete}
-        className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+        className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs font-medium transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
         disabled={loading}
       >
         {loading ? 'Deleting...' : 'Delete'}

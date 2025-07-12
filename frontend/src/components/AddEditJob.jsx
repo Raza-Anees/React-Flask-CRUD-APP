@@ -95,40 +95,54 @@ export default function AddEditJob({ isEdit }) {
   const jobTypes = ['Full-time', 'Part-time', 'Contract', 'Internship'];
 
   return (
-    <div className="min-h-screen py-16 px-4 bg-gray-50">
-      <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-8">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+    <div className="min-h-screen py-8 md:py-16 px-4 bg-gray-50">
+      <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-6 md:p-8">
+        <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-6 text-center">
           {isEdit ? 'Edit Job' : 'Post a New Job'}
         </h2>
-        <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Title, Company, Posting Date fields */}
-          {['title', 'company', 'posting_date'].map(field => (
-            <div key={field}>
-              <input
-                name={field}
-                type={field === 'posting_date' ? 'date' : 'text'}
-                value={formData[field]}
-                onChange={handleChange}
-                placeholder={
-                  field === 'posting_date'
-                    ? 'Posting Date'
-                    : field.charAt(0).toUpperCase() + field.slice(1).replace('_', ' ')
-                }
-                required
-                className="w-full px-4 py-3 border border-gray-300 rounded-md"
-                disabled={loading}
-              />
-              {errors[field] && <div className="text-red-500 text-sm mt-1">{errors[field]}</div>}
-            </div>
-          ))}
-          {/* Location Dropdown */}
+        
+        <form onSubmit={handleSubmit} className="space-y-4 md:space-y-5">
+          {/* Title */}
           <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Job Title *</label>
+            <input
+              name="title"
+              type="text"
+              value={formData.title}
+              onChange={handleChange}
+              placeholder="e.g., Senior Actuary"
+              required
+              className="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              disabled={loading}
+            />
+            {errors.title && <div className="text-red-500 text-sm mt-1">{errors.title}</div>}
+          </div>
+
+          {/* Company */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Company *</label>
+            <input
+              name="company"
+              type="text"
+              value={formData.company}
+              onChange={handleChange}
+              placeholder="e.g., Insurance Corp"
+              required
+              className="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              disabled={loading}
+            />
+            {errors.company && <div className="text-red-500 text-sm mt-1">{errors.company}</div>}
+          </div>
+
+          {/* Location */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Location *</label>
             <select
               name="location"
               value={formData.location}
               onChange={handleChange}
               required
-              className="w-full px-4 py-3 border border-gray-300 rounded-md"
+              className="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
               disabled={loading}
             >
               <option value="">Select Location</option>
@@ -138,14 +152,16 @@ export default function AddEditJob({ isEdit }) {
             </select>
             {errors.location && <div className="text-red-500 text-sm mt-1">{errors.location}</div>}
           </div>
-          {/* Job Type Dropdown */}
+
+          {/* Job Type */}
           <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Job Type *</label>
             <select
               name="job_type"
               value={formData.job_type}
               onChange={handleChange}
               required
-              className="w-full px-4 py-3 border border-gray-300 rounded-md"
+              className="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
               disabled={loading}
             >
               <option value="">Select Job Type</option>
@@ -155,44 +171,91 @@ export default function AddEditJob({ isEdit }) {
             </select>
             {errors.job_type && <div className="text-red-500 text-sm mt-1">{errors.job_type}</div>}
           </div>
-          <input
-            name="tags"
-            value={formData.tags}
-            onChange={handleChange}
-            placeholder="Tags (comma separated)"
-            className="w-full px-4 py-3 border border-gray-300 rounded-md"
-            disabled={loading}
-          />
-          <input
-            name="salary"
-            value={formData.salary}
-            onChange={handleChange}
-            placeholder="Salary (optional)"
-            className="w-full px-4 py-3 border border-gray-300 rounded-md"
-            disabled={loading}
-          />
-          <input
-            name="url"
-            value={formData.url}
-            onChange={handleChange}
-            placeholder="Job Link (optional)"
-            className="w-full px-4 py-3 border border-gray-300 rounded-md"
-            disabled={loading}
-          />
-          <textarea
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            placeholder="Job Description"
-            rows="5"
-            className="w-full px-4 py-3 border border-gray-300 rounded-md"
-            disabled={loading}
-          />
-          {apiError && <div className="text-red-500 text-center">{apiError}</div>}
-          {success && <div className="text-green-600 text-center">{success}</div>}
+
+          {/* Posting Date */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Posting Date *</label>
+            <input
+              name="posting_date"
+              type="date"
+              value={formData.posting_date}
+              onChange={handleChange}
+              required
+              className="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              disabled={loading}
+            />
+            {errors.posting_date && <div className="text-red-500 text-sm mt-1">{errors.posting_date}</div>}
+          </div>
+
+          {/* Tags */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Tags</label>
+            <input
+              name="tags"
+              value={formData.tags}
+              onChange={handleChange}
+              placeholder="e.g., Python, SQL, Pricing (comma separated)"
+              className="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              disabled={loading}
+            />
+          </div>
+
+          {/* Salary */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Salary</label>
+            <input
+              name="salary"
+              value={formData.salary}
+              onChange={handleChange}
+              placeholder="e.g., $80,000 - $120,000"
+              className="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              disabled={loading}
+            />
+          </div>
+
+          {/* URL */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Job Link</label>
+            <input
+              name="url"
+              value={formData.url}
+              onChange={handleChange}
+              placeholder="https://company.com/careers/job"
+              className="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              disabled={loading}
+            />
+          </div>
+
+          {/* Description */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Job Description</label>
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              placeholder="Enter detailed job description..."
+              rows="6"
+              className="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent resize-vertical"
+              disabled={loading}
+            />
+          </div>
+
+          {/* Error and Success Messages */}
+          {apiError && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
+              {apiError}
+            </div>
+          )}
+          {success && (
+            <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-md">
+              {success}
+            </div>
+          )}
+
+          {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-md transition"
+            className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 md:py-4 rounded-md transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={loading}
           >
             {loading ? 'Submitting...' : isEdit ? 'Update Job' : 'Submit Job'}
